@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "livewire/livewire": "^3.3"
+        "blade-ui-kit/blade-icons": "^1.8"
     },
     "autoload": {
         "psr-4": {
