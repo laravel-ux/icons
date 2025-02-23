@@ -1,0 +1,27 @@
+{
+    "name": "laravel-ui/icons",
+    "description": "Icons for the Laravel UI.",
+    "keywords": ["laravel", "tailwind", "livewire"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "livewire/livewire": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaravelUi\\Icons\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelUi\\Icons\\IconsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
