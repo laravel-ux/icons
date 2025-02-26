@@ -29,7 +29,7 @@ class IconsServiceProvider extends ServiceProvider
             function (Factory $factory) {
                 $factory->add(
                     'lucide',
-                    ['path' => __DIR__ . '/../stubs/resources/svg', 'prefix' => 'lucide'],
+                    ['path' => __DIR__.'/../stubs/resources/svg', 'prefix' => 'lucide'],
                 );
             },
         );
@@ -39,7 +39,7 @@ class IconsServiceProvider extends ServiceProvider
 
     protected function bootComponents(): static
     {
-        Blade::anonymousComponentPath(__DIR__ . '/../stubs/resources/views/components', 'ui');
+        Blade::anonymousComponentPath(__DIR__.'/../stubs/resources/views/components', 'ui');
 
         return $this;
     }
