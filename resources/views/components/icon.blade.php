@@ -4,7 +4,7 @@
 ])
 @php
     $attributes = $attributes
-        ->class('shrink-0')
+//        ->class('shrink-0')
         ->merge([
             'width' => match ($size) {
                 'sm' => 16,
