@@ -1,22 +1,21 @@
 {
     "name": "laravel-ui/icons",
-    "description": "Icons for the Laravel UI.",
-    "keywords": ["laravel", "tailwind", "livewire"],
+    "description": "Icons for the Laravel UX.",
+    "keywords": ["laravel", "tailwind"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "blade-ui-kit/blade-icons": "^1.8",
-        "laravel-ui/supports": "*"
+        "blade-ui-kit/blade-icons": "^1.8"
     },
     "autoload": {
         "psr-4": {
-            "LaravelUi\\Icons\\": "src/"
+            "LaravelUx\\Icons\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "LaravelUi\\Icons\\IconsServiceProvider"
+                "LaravelUx\\Icons\\IconsServiceProvider"
             ]
         }
     },

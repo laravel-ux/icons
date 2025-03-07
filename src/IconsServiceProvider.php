@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelUi\Icons;
+namespace LaravelUx\Icons;
 
 use BladeUI\Icons\Exceptions\CannotRegisterIconSet;
 use BladeUI\Icons\Factory;
@@ -39,7 +39,7 @@ class IconsServiceProvider extends ServiceProvider
 
     protected function bootComponents(): static
     {
-        Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', 'ui');
+        Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', 'ux');
 
         return $this;
     }
