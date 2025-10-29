@@ -11,16 +11,6 @@ class IconsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->registerSvg();
-    }
-
-    public function boot(): void
-    {
-        $this->bootComponents();
-    }
-
-    protected function registerSvg(): static
-    {
         $this->callAfterResolving(
             Factory::class,
             /**
@@ -29,18 +19,14 @@ class IconsServiceProvider extends ServiceProvider
             function (Factory $factory) {
                 $factory->add(
                     'lucide',
-                    ['path' => __DIR__ . '/../resources/svg', 'prefix' => 'lucide'],
+                    ['path' => __DIR__ . '/../resources/icons', 'prefix' => 'lucide'],
                 );
             },
         );
-
-        return $this;
     }
 
-    protected function bootComponents(): static
+    public function boot(): void
     {
         Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', 'ux');
-
-        return $this;
     }
 }

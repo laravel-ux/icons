@@ -1,5 +1,3 @@
-<p align="center"><img src="./art/logo.png" alt="Laravel UX Icons"></p>
-
 # Laravel UX Icons
 
 Laravel UX Icons is a collection of [Lucide](https://lucide.dev/) icons packaged for seamless integration into [Laravel](https://laravel.com/) and [Livewire](https://livewire.laravel.com/) applications.
