@@ -33,6 +33,7 @@ Use the package component in application Blade and Livewire markup:
 <x-ux::icon name="github" />
 <x-ux::icon name="arrow-right" class="size-4" />
 <x-ux::icon name="settings-2" class="size-5 shrink-0" />
+<x-ux::icon name="search" :size="20" />
 ```
 
 Rules:
@@ -40,25 +41,26 @@ Rules:
 - Pass `name` without `lucide-`.
 - `name` must match `resources/icons/{name}.svg`.
 - The component calls `svg("lucide-{$name}")` internally.
-- Prefer Tailwind classes for sizing and layout: `size-4`, `size-5`, `shrink-0`, `text-muted-foreground`, `transition-transform`.
-- Use `:size` only when explicit SVG `width` and `height` attributes are required.
+- Size icons with Tailwind classes or with the `size` prop. Both are supported.
+- Use Tailwind classes for layout-driven styling: `size-4`, `size-5`, `shrink-0`, `text-muted-foreground`, `transition-transform`.
+- Use `:size` when explicit SVG `width` and `height` attributes are clearer or when a component API wants a numeric size.
 - Direct `svg('lucide-name')` is allowed for low-level package internals, but should not be the default style in app views.
 
 ## Icon Selection
 
 Prefer common, recognizable symbols:
 
-| Intent | Icon names |
-| --- | --- |
-| Continue / link forward | `arrow-right`, `arrow-up-right` |
-| Expand / collapse | `chevron-down`, `chevron-up`, `chevron-right` |
-| Add / remove / close | `plus`, `minus`, `x`, `trash-2` |
-| Success / selected | `check`, `check-check`, `circle-check` |
-| Search | `search` |
-| Settings / controls | `settings-2`, `sliders-horizontal` |
-| User/account | `user`, `circle-user`, `users` |
-| Navigation/menu | `menu`, `panel-left` |
-| GitHub | `github` |
+| Intent                  | Icon names                                    |
+|-------------------------|-----------------------------------------------|
+| Continue / link forward | `arrow-right`, `arrow-up-right`               |
+| Expand / collapse       | `chevron-down`, `chevron-up`, `chevron-right` |
+| Add / remove / close    | `plus`, `minus`, `x`, `trash-2`               |
+| Success / selected      | `check`, `check-check`, `circle-check`        |
+| Search                  | `search`                                      |
+| Settings / controls     | `settings-2`, `sliders-horizontal`            |
+| User/account            | `user`, `circle-user`, `users`                |
+| Navigation/menu         | `menu`, `panel-left`                          |
+| GitHub                  | `github`                                      |
 
 When uncertain, search the package SVG directory before using the icon:
 
@@ -109,4 +111,4 @@ Use the smallest reliable check. Inside the Laravel UX website, run commands thr
 vendor/bin/sail artisan tinker --execute 'view("your.view")->render();'
 ```
 
-If PHP files changed, run Pint for the changed PHP files. If Blade classes changed, run the relevant frontend build.
+If PHP files are changed, run Pint for the changed PHP files. If Blade classes are changed, run the relevant frontend build.

@@ -16,8 +16,8 @@ Use the package component in application Blade and Livewire markup:
 - Prefer the `x-ux::icon` component in application Blade and Livewire markup.
 - Pass icon names without the `lucide-` prefix. The component adds that prefix internally.
 - Icon names are kebab-case filenames from `resources/icons` without `.svg`.
-- Prefer Tailwind classes for sizing and alignment, for example `class="size-4 shrink-0"`.
-- Use the `size` prop only when explicit SVG `width` and `height` attributes are required.
+- Size icons with either Tailwind classes, for example `class="size-4 shrink-0"`, or the `size` prop, for example `:size="20"`.
+- Use classes when sizing should follow surrounding Tailwind UI patterns; use `size` when explicit SVG `width` and `height` attributes are clearer.
 - Before using an uncommon icon, verify `resources/icons/{name}.svg` exists.
 - Adding new SVG files is outside normal application implementation. Prefer existing Lucide icons unless explicitly maintaining this package.
 - Direct `svg('lucide-name')` calls are acceptable for low-level package work, but should not be the default application style.
