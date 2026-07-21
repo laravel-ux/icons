@@ -1,114 +1,150 @@
 ---
 name: laravel-ux-icons-development
-description: "Use when working with Laravel UX Icons, including <x-ux::icon>, Lucide icon names, Blade UI Kit icon rendering, missing icon errors, package SVG maintenance, icon sizing, accessibility, and icon usage in Laravel Blade, Livewire, or Tailwind UI components."
+description: "Build, review, or debug Laravel Blade and Livewire interfaces that use laravel-ux/icons or the x-ux::icon component. Use when choosing or verifying Lucide icon names, styling and sizing icons, making icon-only controls accessible, resolving missing Blade UI Kit icons, or maintaining the package's bundled Lucide SVG files."
 ---
 
 # Laravel UX Icons Development
 
-## Use This Skill For
+Use the package component for Lucide icons in application markup. Verify names against the bundled files instead of guessing.
 
-- Rendering icons with `<x-ux::icon>`.
-- Choosing, validating, or replacing Lucide icon names.
-- Fixing `Svg by name "..." from set "lucide" not found` errors.
-- Adjusting icon sizing, color, alignment, or accessibility.
-- Maintaining package SVG files when the task explicitly targets `laravel-ux/icons` package internals.
-
-## Package Facts
-
-- Composer package: `laravel-ux/icons`.
-- Service provider: `LaravelUx\Icons\IconsServiceProvider`.
-- Icon set name: `lucide`.
-- SVG directory: `resources/icons`.
-- Component view: `resources/views/components/icon.blade.php`.
-- Component namespace: `ux`.
-- Rendering dependency: `blade-ui-kit/blade-icons`.
-
-The provider registers SVG files as Blade UI Kit icons with the `lucide` prefix and registers package Blade components under `ux`.
-
-## Preferred API
-
-Use the package component in application Blade and Livewire markup:
+## Public API
 
 ```blade
-<x-ux::icon name="github" />
-<x-ux::icon name="arrow-right" class="size-4" />
-<x-ux::icon name="settings-2" class="size-5 shrink-0" />
-<x-ux::icon name="search" :size="20" />
+<x-ux::icon name="search" />
+<x-ux::icon name="arrow-right" class="size-4 shrink-0" />
+<x-ux::icon name="settings-2" :size="20" />
 ```
 
-Rules:
+`x-ux::icon` accepts these component props:
 
-- Pass `name` without `lucide-`.
-- `name` must match `resources/icons/{name}.svg`.
-- The component calls `svg("lucide-{$name}")` internally.
-- Size icons with Tailwind classes or with the `size` prop. Both are supported.
-- Use Tailwind classes for layout-driven styling: `size-4`, `size-5`, `shrink-0`, `text-muted-foreground`, `transition-transform`.
-- Use `:size` when explicit SVG `width` and `height` attributes are clearer or when a component API wants a numeric size.
-- Direct `svg('lucide-name')` is allowed for low-level package internals, but should not be the default style in app views.
+| Prop    | Type             | Default | Purpose                                      |
+|---------|------------------|---------|----------------------------------------------|
+| `name*` | `string`         | -       | Select a bundled kebab-case Lucide filename. |
+| `size`  | `int\|string`   | `24`    | Set SVG `width` and `height`.                 |
 
-## Icon Selection
+All other attributes are forwarded to the SVG through Blade UI Kit Icons.
 
-Prefer common, recognizable symbols:
+## Core Rules
 
-| Intent                  | Icon names                                    |
+- Pass the filename without `.svg` and without the internal `lucide-` prefix.
+- Prefer `x-ux::icon` in Blade and Livewire views. Reserve `svg('lucide-name')` for low-level package internals.
+- Use Tailwind classes when size or color belongs to the surrounding layout: `size-4`, `shrink-0`, `text-muted-foreground`.
+- Use `:size="20"` when explicit SVG dimensions are part of the consuming component's API.
+- Let icons inherit color through `currentColor`; do not add hardcoded SVG colors.
+- Never accept an unrestricted user-provided icon name. Map application state to a known allowlist of names.
+
+## Find and Verify Names
+
+Search before using an uncommon icon:
+
+```shell
+rg --files packages/icons/resources/icons | rg '/search-name\.svg$'
+```
+
+Search by related terms when the first name is absent:
+
+```shell
+rg --files packages/icons/resources/icons | rg '/(circle-)?check|badge-check'
+```
+
+Use the exact lowercase kebab-case filename returned by the search. Do not translate React export names such as `ArrowRightIcon` mechanically when an alias may have changed.
+
+Common choices:
+
+| Intent                  | Names                                         |
 |-------------------------|-----------------------------------------------|
-| Continue / link forward | `arrow-right`, `arrow-up-right`               |
+| Continue / external link | `arrow-right`, `arrow-up-right`              |
 | Expand / collapse       | `chevron-down`, `chevron-up`, `chevron-right` |
 | Add / remove / close    | `plus`, `minus`, `x`, `trash-2`               |
 | Success / selected      | `check`, `check-check`, `circle-check`        |
 | Search                  | `search`                                      |
 | Settings / controls     | `settings-2`, `sliders-horizontal`            |
-| User/account            | `user`, `circle-user`, `users`                |
-| Navigation/menu         | `menu`, `panel-left`                          |
-| GitHub                  | `github`                                      |
-
-When uncertain, search the package SVG directory before using the icon:
-
-```shell
-rg --files resources/icons | rg '/icon-name\.svg$'
-```
+| User / account          | `user`, `circle-user`, `users`                |
+| Navigation              | `menu`, `panel-left`                          |
 
 ## Accessibility
 
-- Treat icons as decorative by default.
-- Decorative icons inside labelled buttons or links do not need their own label.
-- Icon-only controls must put the accessible label on the parent interactive element:
+Treat an icon as decorative when nearby text or the parent control already provides its meaning:
 
 ```blade
-<x-ux::button aria-label="Open menu" size="icon" variant="ghost">
-    <x-ux::icon name="menu" class="size-4" />
+<x-ux::button>
+    Continue
+    <x-ux::icon name="arrow-right" data-icon="inline-end" />
 </x-ux::button>
 ```
 
-- Do not make the SVG itself the labelled element unless there is a specific low-level reason.
-- For destructive or high-risk actions, prefer visible text, a tooltip, or an explicit `aria-label` on the button/link.
+Put the accessible name on an icon-only interactive element, not on its SVG:
+
+```blade
+<x-ux::button aria-label="Open navigation" size="icon" variant="ghost">
+    <x-ux::icon name="menu" />
+</x-ux::button>
+```
+
+- Use visible text where an action is ambiguous or high risk.
+- Do not rely on icon shape or color alone to communicate important state.
+- Add `aria-hidden="true"` to a decorative icon only when the surrounding component does not already handle decorative SVG semantics.
+- Do not make the SVG itself clickable; use a semantic button or link.
+
+## RTL
+
+Icons representing physical direction may need to reverse in RTL:
+
+```blade
+<x-ux::icon name="chevron-right" class="rtl:rotate-180" />
+```
+
+Do not reverse non-directional icons such as `search`, `check`, `settings-2`, or brand marks. Prefer logical `data-icon="inline-start"` and `data-icon="inline-end"` hooks when a parent component supports them.
+
+## Dynamic and Livewire Markup
+
+Map state to a small known set of icons:
+
+```blade
+@php
+    $statusIcon = match ($order->status) {
+        'paid' => 'circle-check',
+        'failed' => 'circle-x',
+        default => 'clock-3',
+    };
+@endphp
+
+<x-ux::icon :name="$statusIcon" wire:key="order-icon-{{ $order->id }}" />
+```
+
+The icon component has no client-side state and needs no custom Alpine or JavaScript plugin.
 
 ## Missing Icon Errors
 
-For errors like `Svg by name "code-2" from set "lucide" not found`:
+For `Svg by name "..." from set "lucide" not found`:
 
-1. Confirm the caller did not pass the `lucide-` prefix to `<x-ux::icon>`.
-2. Confirm `resources/icons/{name}.svg` exists.
-3. Pick a nearby available Lucide icon if the desired filename is absent.
-4. Do not add a new SVG during normal app work. New SVGs are package maintenance only.
-5. Re-render the smallest Blade view that exercises the icon.
+1. Remove `.svg` or `lucide-` from the component's `name` value.
+2. Confirm `packages/icons/resources/icons/{name}.svg` exists.
+3. Check whether Lucide renamed the icon and select the current bundled name.
+4. Clear compiled views or the Blade Icons cache if the file exists but is not discovered.
+5. Render the smallest Blade view that exercises the icon.
 
-## SVG Maintenance
+Do not add an arbitrary third-party SVG to fix an application typo.
 
-Only do this when explicitly maintaining `laravel-ux/icons` itself:
+## Package Maintenance
 
-- Keep filenames lowercase kebab-case with `.svg` extension.
-- Keep SVGs compatible with Blade UI Kit Icons.
-- Prefer Lucide-style SVGs using currentColor, usually `stroke="currentColor"` and `fill="none"`.
-- Avoid hardcoded colors.
-- Do not change the component API unless the task is explicitly about package API design.
+The bundled upstream version is recorded in `packages/icons/LUCIDE_VERSION`. The package contains the complete official Lucide SVG set for that version and no deprecated or package-specific aliases.
+
+When explicitly updating the package:
+
+1. Read the latest stable release from the official `lucide-icons/lucide` repository.
+2. Download its `lucide-icons-{version}.zip` release asset.
+3. Copy only `icons/*.svg`; never copy JSON metadata or generated fonts.
+4. Remove the upstream fixed `width="24"` and `height="24"` attributes. The Blade component supplies dimensions, and retaining both creates duplicate SVG attributes.
+5. Replace the icon set exactly: update changed SVGs, add new names, and delete names removed upstream.
+6. Update `LUCIDE_VERSION`.
+7. Verify filename uniqueness, SVG parsing, `currentColor` usage, and a representative Blade render.
+
+Do not hand-edit upstream SVG geometry. Package-specific SVGs should live in a separate icon set instead of masquerading as Lucide icons.
 
 ## Validation
 
-Use the smallest reliable check. Inside the Laravel UX website, run commands through Sail:
-
-```shell
-vendor/bin/sail artisan tinker --execute 'view("your.view")->render();'
-```
-
-If PHP files are changed, run Pint for the changed PHP files. If Blade classes are changed, run the relevant frontend build.
+- Confirm every used name exists as an SVG file.
+- Check that all SVGs parse and have a `viewBox`.
+- Render at least one common icon and one icon added by the current Lucide update.
+- Run the package or consuming application's relevant tests after provider or component changes.
