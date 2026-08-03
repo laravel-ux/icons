@@ -1,4 +1,4 @@
 interface:
   display_name: "Laravel UX Icons"
-  short_description: "Use Lucide icons correctly in Laravel Blade"
-  default_prompt: "Use $laravel-ux-icons-development to choose and implement an accessible Lucide icon in my Laravel Blade interface."
+  short_description: "Use Lucide icons correctly in Laravel UX"
+  default_prompt: "Use $laravel-ux-icons-development to choose and implement an accessible Lucide icon in my Laravel UX Blade interface."

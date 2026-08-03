@@ -1,6 +1,6 @@
 ---
 name: laravel-ux-icons-development
-description: "Build, review, or debug Laravel Blade and Livewire interfaces that use laravel-ux/icons or the x-ux::icon component. Use when choosing or verifying Lucide icon names, styling and sizing icons, making icon-only controls accessible, resolving missing Blade UI Kit icons, or maintaining the package's bundled Lucide SVG files."
+description: "Build, review, or debug Laravel Blade and Livewire interfaces that use laravel-ux/icons, x-ux::icon, or icons inside laravel-ux/ui components. Use when choosing or verifying Lucide icon names, positioning icons in buttons and badges, styling and sizing icons, handling RTL icons, making icon-only controls accessible, resolving missing Blade UI Kit icons, or maintaining the package's bundled Lucide SVG files."
 ---
 
 # Laravel UX Icons Development
@@ -32,6 +32,32 @@ All other attributes are forwarded to the SVG through Blade UI Kit Icons.
 - Use `:size="20"` when explicit SVG dimensions are part of the consuming component's API.
 - Let icons inherit color through `currentColor`; do not add hardcoded SVG colors.
 - Never accept an unrestricted user-provided icon name. Map application state to a known allowlist of names.
+- Do not add attributes to an icon unless they control required styling, state, or semantics.
+
+## Laravel UX UI Integration
+
+Use the UI component's icon contract instead of recreating its spacing and sizing:
+
+```blade
+<x-ux::button variant="outline">
+    <x-ux::icon name="git-branch" data-icon="inline-start" />
+    New Branch
+</x-ux::button>
+
+<x-ux::button variant="outline">
+    Continue
+    <x-ux::icon name="arrow-right" data-icon="inline-end" class="rtl:rotate-180" />
+</x-ux::button>
+```
+
+- Add `data-icon="inline-start"` or `data-icon="inline-end"` when Button, Badge, Toggle, Tabs Trigger, or another component uses these hooks to adjust inline padding.
+- Use logical start and end positions. Do not add physical `ml-*` or `mr-*` spacing around these icons.
+- Let the parent component apply its default SVG size. Add an explicit `size-*` class only when the design requires a different size.
+- Match icon-only Button sizes to the surrounding controls with `icon-xs`, `icon-sm`, `icon`, or `icon-lg`.
+- Keep the icon inside the semantic UI component. Do not make the SVG itself interactive.
+- Do not add a second check, chevron, close, or status icon when the UI component already renders its own indicator.
+- Use the dedicated `x-ux::spinner` component for loading states instead of manually animating a loader icon.
+- Verify every icon name against `packages/icons/resources/icons` before adding it to a UI component or example. Do not infer that a React Lucide export or a shadcn example name exists in the bundled version.
 
 ## Find and Verify Names
 
@@ -85,16 +111,18 @@ Put the accessible name on an icon-only interactive element, not on its SVG:
 - Do not rely on icon shape or color alone to communicate important state.
 - Add `aria-hidden="true"` to a decorative icon only when the surrounding component does not already handle decorative SVG semantics.
 - Do not make the SVG itself clickable; use a semantic button or link.
+- Give every icon-only button, link, toggle, trigger, or action an accessible name through `aria-label`, `aria-labelledby`, or visually hidden text.
+- Put that accessible name on the interactive parent, not on `x-ux::icon`.
 
 ## RTL
 
-Icons representing physical direction may need to reverse in RTL:
+Icons whose meaning follows reading or navigation direction may need to reverse in RTL:
 
 ```blade
 <x-ux::icon name="chevron-right" class="rtl:rotate-180" />
 ```
 
-Do not reverse non-directional icons such as `search`, `check`, `settings-2`, or brand marks. Prefer logical `data-icon="inline-start"` and `data-icon="inline-end"` hooks when a parent component supports them.
+Reverse arrows and horizontal chevrons only when they communicate reading, navigation, or hierarchy direction. Do not reverse non-directional icons such as `search`, `check`, `settings-2`, vertical chevrons, or brand marks. Prefer logical `data-icon="inline-start"` and `data-icon="inline-end"` hooks when a parent component supports them.
 
 ## Dynamic and Livewire Markup
 
