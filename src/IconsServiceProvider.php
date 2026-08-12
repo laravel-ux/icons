@@ -19,7 +19,7 @@ class IconsServiceProvider extends ServiceProvider
             function (Factory $factory) {
                 $factory->add(
                     'lucide',
-                    ['path' => __DIR__ . '/../resources/icons', 'prefix' => 'lucide'],
+                    ['path' => __DIR__.'/../resources/icons', 'prefix' => 'lucide'],
                 );
             },
         );
@@ -27,6 +27,6 @@ class IconsServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', 'ux');
+        Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'ux');
     }
 }
