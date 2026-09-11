@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelUx\Icons;
 
 use BladeUI\Icons\Exceptions\CannotRegisterIconSet;
